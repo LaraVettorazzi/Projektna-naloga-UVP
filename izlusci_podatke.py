@@ -11,7 +11,7 @@ def najdi_recept(html: str):
 
 def najdi_url(recept: str):
     vzorec = re.compile(
-        r'<span></span></div></div></a><a href=(?P<url>.+*) class=',
+        r'<span></span></div></div></a><a href=(?P<url>.+?) class=',
         re.DOTALL
     )
     najdba = vzorec.search(recept)
@@ -19,13 +19,10 @@ def najdi_url(recept: str):
 
 def izlusci_podatke(recept: str):
     vzorec = re.compile(
-        r'Compatible content="ie=edge"><title>(?P<ime>.+*) \| Okusno.je</title>',
+        r'Compatible content="ie=edge"><title>(?P<ime>.+?) \| Okusno.je</title>',
         re.DOTALL
     )
     najdba = vzorec.search(recept)
     slovar = {}
     slovar['ime'] = najdba['ime']
     return slovar
-
-# with open("poskusni_recept.txt", "w", encoding="utf8") as dat:
-#     print(requests.get('https://okusno.je/recept/ledene-kocke-z-gozdnimi-sadezi').text, file=dat)
