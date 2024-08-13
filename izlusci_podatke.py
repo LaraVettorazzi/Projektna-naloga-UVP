@@ -7,10 +7,14 @@ def prenesi_podatke(link):
     #     print(html.text, file=dat)
     return html.text
 
-# prenesi_podatke("https://okusno.je/iskanje")
-
 def najdi_recept(html: str):
     vzorec = r'<span></span></div></div></a><a href=/recept/.*?<span></span>'
-    return re.findall(vzorec, html, flags=re.DOTALL)
+    return re.findall(vzorec, html, re.DOTALL)
 
-print(len(najdi_recept(prenesi_podatke("https://okusno.je/iskanje"))))
+def najdi_url(recept: str):
+    vzorec = re.compile(
+        r'<span></span></div></div></a><a href=(?P<url>.+*) class=',
+        re.DOTALL
+    )
+    najdba = vzorec.search(recept)
+    return najdba["url"]
