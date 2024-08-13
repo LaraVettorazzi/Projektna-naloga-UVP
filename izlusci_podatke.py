@@ -3,8 +3,6 @@ import re
 
 def prenesi_podatke(link):
     html = requests.get(link)
-    # with open("html.txt", "w", encoding="utf8") as dat:
-    #     print(html.text, file=dat)
     return html.text
 
 def najdi_recept(html: str):
@@ -18,3 +16,16 @@ def najdi_url(recept: str):
     )
     najdba = vzorec.search(recept)
     return najdba["url"]
+
+def izlusci_podatke(recept: str):
+    vzorec = re.compile(
+        r'Compatible content="ie=edge"><title>(?P<ime>.+*) \| Okusno.je</title>',
+        re.DOTALL
+    )
+    najdba = vzorec.search(recept)
+    slovar = {}
+    slovar['ime'] = najdba['ime']
+    return slovar
+
+# with open("poskusni_recept.txt", "w", encoding="utf8") as dat:
+#     print(requests.get('https://okusno.je/recept/ledene-kocke-z-gozdnimi-sadezi').text, file=dat)
