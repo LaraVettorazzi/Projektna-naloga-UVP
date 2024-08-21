@@ -7,10 +7,12 @@ def naredi_csv():
         pisatelj.writerow(
             [
                 'Ime',
-                'Kategorija'
+                'Kategorija',
+                'Težavnost',
+                'Čas'
             ]
         )
-        for stran in range(1, 4): #popravi na vse_strani() + 1
+        for stran in range(1, 3): #popravi na vse_strani() + 1
             podatki = prenesi_podatke(f'https://okusno.je/iskanje?t=recipe&sort=score&p={stran}')
             recepti = najdi_recept(podatki)
             for recept in recepti:
@@ -20,7 +22,9 @@ def naredi_csv():
                 pisatelj.writerow(
                     [
                         podatki_recept['ime'],
-                        podatki_recept['kategorija']
+                        podatki_recept['kategorija'],
+                        podatki_recept['tezavnost'],
+                        podatki_recept['cas']
                     ]
                 )
 
