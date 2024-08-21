@@ -24,9 +24,9 @@ def izlusci_podatke(recept: str):
         r'"recipeCategory":"(?P<kategorija>.+?)".*?'
         r'"recipeIngredient":\[(?P<sestavine>.+?)],.*?'
         r'"recipeInstructions":(?P<koraki>.*?)"nutrition".*?'
-        r'difficulty-(?P<tezavnost>\d).*?'   #63
-        r'SKUPAJ</span>\n(?P<cas>.*?)</div></div></div>.*?' #67 #TODO funkcija, ki niz spremeni v čas
-        r'<tr><td><td>(?P<hranilna_vrednost>.*?)<td>', #70 #TODO
+        r'difficulty-(?P<tezavnost>\d).*?'
+        r'SKUPAJ</span>\n(?P<cas>.*?)</div></div></div>.*?'
+        r'<tr><td><td>(?P<hranilna_vrednost>.*?)<td>',
         re.DOTALL
     )
     najdba = vzorec.search(recept)
@@ -34,8 +34,8 @@ def izlusci_podatke(recept: str):
     slovar['ime'] = najdba['ime']
     slovar['kategorija'] = najdba['kategorija']
     slovar['tezavnost'] = najdba['tezavnost']
-    slovar['cas'] = najdba['cas']
-    slovar['hranilna_vrednost'] = najdba['hranilna_vrednost']
+    slovar['cas'] = cas_v_minutah(najdba['cas'])
+    slovar['hranilna_vrednost'] = hranilna_vrednost_v_kcal(najdba['hranilna_vrednost'])
     slovar['koraki'] = najdba['koraki']
     slovar['sestavine'] = najdba['sestavine']
     slovar['opis'] = najdba['opis']
@@ -49,3 +49,24 @@ def vse_strani():
     )
     najdba = vzorec.search(podatki)
     return int(najdba['st_strani'])
+
+def cas_v_minutah(niz):
+    if 'h' in niz:
+        vzorec = re.compile(
+            r'(?P<ure>\d+) h (?P<minute>\d+) min'
+        )
+        najdba = vzorec.search(niz)
+        return int(najdba['ure']) * 60 + int(najdba['minute'])
+    else:
+        vzorec = re.compile(
+            r'(?P<minute>\d+) min'
+        )
+        najdba = vzorec.search(niz)
+        return int(najdba['minute'])
+
+def hranilna_vrednost_v_kcal(niz):
+    vzorec = re.compile(
+            r'(?P<kcal>[\d\.]+) kCal'
+        )
+    najdba = vzorec.search(niz)
+    return int(round(float(najdba['kcal']), 0))
