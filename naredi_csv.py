@@ -9,7 +9,11 @@ def naredi_csv():
                 'Ime',
                 'Kategorija',
                 'Težavnost',
-                'Čas'
+                'Čas',
+                'Hranilna vrednost',
+                'Koraki',
+                'Sestavine',
+                'Opis'
             ]
         )
         for stran in range(1, 3): #popravi na vse_strani() + 1
@@ -24,7 +28,11 @@ def naredi_csv():
                         podatki_recept['ime'],
                         podatki_recept['kategorija'],
                         podatki_recept['tezavnost'],
-                        podatki_recept['cas']
+                        podatki_recept['cas'],
+                        podatki_recept['hranilna_vrednost'],
+                        podatki_recept['koraki'],
+                        podatki_recept['sestavine'],
+                        podatki_recept['opis']
                     ]
                 )
 
