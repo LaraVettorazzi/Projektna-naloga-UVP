@@ -6,12 +6,12 @@ def prenesi_podatke(link):
     return html.text
 
 def najdi_recept(html: str):
-    vzorec = r'<span></span></div></div></a><a href=/recept/.*?<span></span>'
+    vzorec = r'<a href=/recept/.*?<span></span>'
     return re.findall(vzorec, html, re.DOTALL)
 
 def najdi_url(recept: str):
     vzorec = re.compile(
-        r'<span></span></div></div></a><a href=(?P<url>.+?) class=',
+        r'<a href=(?P<url>.+?) class=',
         re.DOTALL
     )
     najdba = vzorec.search(recept)
@@ -19,12 +19,14 @@ def najdi_url(recept: str):
 
 def izlusci_podatke(recept: str):
     vzorec = re.compile(
-        r'Compatible content="ie=edge"><title>(?P<ime>.+?) \| Okusno.je</title>',
+        r'Compatible content="ie=edge"><title>(?P<ime>.+?) \| Okusno.je</title>.*?'
+        r'"recipeCategory":"(?P<kategorija>.+?)"',
         re.DOTALL
     )
     najdba = vzorec.search(recept)
     slovar = {}
     slovar['ime'] = najdba['ime']
+    slovar['kategorija'] = najdba['kategorija']
     return slovar
 
 def vse_strani():
