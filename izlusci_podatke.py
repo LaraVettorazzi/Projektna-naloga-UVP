@@ -26,3 +26,12 @@ def izlusci_podatke(recept: str):
     slovar = {}
     slovar['ime'] = najdba['ime']
     return slovar
+
+def vse_strani():
+    podatki = prenesi_podatke('https://okusno.je/iskanje')
+    vzorec = re.compile(
+        r'<button class="button-pag dark:text-white" name=p value=(?P<st_strani>\d+?)>Konec',
+        re.DOTALL
+    )
+    najdba = vzorec.search(podatki)
+    return int(najdba['st_strani'])
