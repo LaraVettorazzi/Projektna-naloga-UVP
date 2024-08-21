@@ -36,9 +36,10 @@ def izlusci_podatke(recept: str):
     slovar['tezavnost'] = najdba['tezavnost']
     slovar['cas'] = cas_v_minutah(najdba['cas'])
     slovar['hranilna_vrednost'] = hranilna_vrednost_v_kcal(najdba['hranilna_vrednost'])
-    slovar['koraki'] = najdba['koraki']
-    slovar['sestavine'] = najdba['sestavine']
+    slovar['koraki'] = prestej_st_korakov(najdba['koraki'])
+    slovar['sestavine'] = prestej_sestavine(najdba['sestavine'])
     slovar['opis'] = najdba['opis']
+    slovar['st_besed'] = prestej_besede(najdba['opis'])
     return slovar
 
 def vse_strani():
@@ -70,3 +71,14 @@ def hranilna_vrednost_v_kcal(niz):
         )
     najdba = vzorec.search(niz)
     return int(round(float(najdba['kcal']), 0))
+
+def prestej_st_korakov(niz):
+    najdba = re.findall("HowToStep", niz)
+    return len(najdba)
+
+def prestej_sestavine(niz):
+    najdba = re.findall('"[\d\w].*?"', niz)
+    return len(najdba)
+
+def prestej_besede(niz:str):
+    return niz.count(' ') + 1
