@@ -18,7 +18,7 @@ def naredi_csv():
                 'Dolžina opisa (črke)'
             ]
         )
-        for stran in range(1, 150): #popravi na vse_strani() + 1
+        for stran in range(1, vse_strani() + 1):
             podatki = prenesi_podatke(f'https://okusno.je/iskanje?t=recipe&sort=score&p={stran}')
             recepti = najdi_recept(podatki)
             for recept in recepti:
