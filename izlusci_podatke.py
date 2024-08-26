@@ -38,8 +38,16 @@ def izlusci_podatke(recept: str):
     slovar['hranilna_vrednost'] = hranilna_vrednost_v_kcal(najdba['hranilna_vrednost'])
     slovar['koraki'] = prestej_st_korakov(najdba['koraki'])
     slovar['sestavine'] = prestej_sestavine(najdba['sestavine'])
-    slovar['opis'] = najdba['opis']
-    slovar['st_besed'] = prestej_besede(najdba['opis'])
+
+    opis = str(najdba['opis'])
+    opis_popravljen = opis.replace('\\u0027', "'").strip('\"').strip(r'\n').strip(r'\r').replace(r'\n', ' ').strip(r' ')
+    while '  ' in opis_popravljen:
+        opis_popravljen = opis_popravljen.replace('  ', ' ')
+    opis_popravljen = opis_popravljen.replace(' ', '').strip(' ')
+
+    slovar['opis'] = opis_popravljen
+    slovar['st_besed'] = prestej_besede(opis_popravljen)
+    slovar['st_crk'] = prestej_crke(opis_popravljen)
     return slovar
 
 def vse_strani():
@@ -82,3 +90,10 @@ def prestej_sestavine(niz):
 
 def prestej_besede(niz:str):
     return niz.count(' ') + 1
+
+def prestej_crke(niz:str):
+    seznam_besed = niz.split()
+    st = 0
+    for beseda in seznam_besed:
+        st += len(beseda)
+    return st
