@@ -29,26 +29,38 @@ def izlusci_podatke(recept: str):
         r'<tr><td><td>(?P<hranilna_vrednost>.*?)<td>',
         re.DOTALL
     )
+    
     najdba = vzorec.search(recept)
-    slovar = {}
-    slovar['ime'] = najdba['ime']
-    slovar['kategorija'] = najdba['kategorija']
-    slovar['tezavnost'] = najdba['tezavnost']
-    slovar['cas'] = cas_v_minutah(najdba['cas'])
-    slovar['hranilna_vrednost'] = hranilna_vrednost_v_kcal(najdba['hranilna_vrednost'])
-    slovar['koraki'] = prestej_st_korakov(najdba['koraki'])
-    slovar['sestavine'] = prestej_sestavine(najdba['sestavine'])
+    if najdba:
+        slovar = {}
+        slovar['ime'] = najdba['ime']
+        slovar['kategorija'] = najdba['kategorija']
+        slovar['tezavnost'] = najdba['tezavnost']
+        slovar['cas'] = cas_v_minutah(najdba['cas'])
+        slovar['hranilna_vrednost'] = hranilna_vrednost_v_kcal(najdba['hranilna_vrednost'])
+        slovar['koraki'] = prestej_st_korakov(najdba['koraki'])
+        slovar['sestavine'] = prestej_sestavine(najdba['sestavine'])
 
-    opis = str(najdba['opis'])
-    opis_popravljen = opis.replace('\\u0027', "'").strip('\"').strip(r'\n').strip(r'\r').replace(r'\n', ' ').strip(r' ')
-    while '  ' in opis_popravljen:
-        opis_popravljen = opis_popravljen.replace('  ', ' ')
-    opis_popravljen = opis_popravljen.replace(' ', '').strip(' ')
+        opis = str(najdba['opis'])
+        opis_popravljen = (opis.replace('\\u0027', '\'')
+                           .replace('\\u0022', '\'')
+                           .replace('u0022', '\'')
+                           .strip('\"')
+                           .replace(r'\r', ' ')
+                           .replace(r'\n', ' ')
+                           .replace(r'\/', '/')
+                           .replace(r'\t', ' ')
+                           .strip(r' '))
+        while '  ' in opis_popravljen:
+            opis_popravljen = opis_popravljen.replace('  ', ' ')
+        opis_popravljen = opis_popravljen.replace(' ', '').strip(' ')
 
-    slovar['opis'] = opis_popravljen
-    slovar['st_besed'] = prestej_besede(opis_popravljen)
-    slovar['st_crk'] = prestej_crke(opis_popravljen)
-    return slovar
+        slovar['opis'] = opis_popravljen
+        slovar['st_besed'] = prestej_besede(opis_popravljen)
+        slovar['st_crk'] = prestej_crke(opis_popravljen)
+        return slovar
+    else:
+        {}
 
 def vse_strani():
     podatki = prenesi_podatke('https://okusno.je/iskanje')

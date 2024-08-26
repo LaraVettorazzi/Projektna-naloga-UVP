@@ -15,33 +15,32 @@ def naredi_csv():
                 'Sestavine',
                 'Opis',
                 'Dolžina opisa (besede)',
-                'Dolzina opisa (črke)'
+                'Dolžina opisa (črke)'
             ]
         )
-        for stran in range(1, 3): #popravi na vse_strani() + 1
+        for stran in range(1, 150): #popravi na vse_strani() + 1
             podatki = prenesi_podatke(f'https://okusno.je/iskanje?t=recipe&sort=score&p={stran}')
             recepti = najdi_recept(podatki)
             for recept in recepti:
                 url = najdi_url(recept)
                 vsebina_recept = prenesi_podatke('https://okusno.je' + url)
                 podatki_recept = izlusci_podatke(vsebina_recept)
-                pisatelj.writerow(
-                    [
-                        podatki_recept['ime'],
-                        podatki_recept['kategorija'],
-                        podatki_recept['tezavnost'],
-                        podatki_recept['cas'],
-                        podatki_recept['hranilna_vrednost'],
-                        podatki_recept['koraki'],
-                        podatki_recept['sestavine'],
-                        podatki_recept['opis'],
-                        podatki_recept['st_besed'],
-                        podatki_recept['st_crk']
-                    ]
-                )
+                if podatki_recept:
+                    pisatelj.writerow(
+                        [
+                            podatki_recept['ime'],
+                            podatki_recept['kategorija'],
+                            podatki_recept['tezavnost'],
+                            podatki_recept['cas'],
+                            podatki_recept['hranilna_vrednost'],
+                            podatki_recept['koraki'],
+                            podatki_recept['sestavine'],
+                            podatki_recept['opis'],
+                            podatki_recept['st_besed'],
+                            podatki_recept['st_crk']
+                        ]
+                    )
+                else:
+                    continue
 
 naredi_csv()        
-
-
-
-
